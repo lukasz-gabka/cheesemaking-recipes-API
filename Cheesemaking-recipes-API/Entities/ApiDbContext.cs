@@ -2,7 +2,7 @@
 
 namespace Cheesemaking_recipes_API.Entities
 {
-    public class ApiDbContext :DbContext
+    public class ApiDbContext : DbContext
     {
         private string _connectionString = "Server=(localdb)\\mssqllocaldb;Database=CheesemakingRecipesApi;Trusted_Connection=True;";
 

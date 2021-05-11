@@ -42,126 +42,153 @@ namespace Cheesemaking_recipes_API
                     new Category()
                     {
                         Name = "Składniki",
+                        Order = 1,
                         Labels =  new List<Label>()
                         {
                             new Label()
                             {
-                                Name = "Rodzaj  mleka"
+                                Name = "Rodzaj  mleka",
+                                Order = 1
                             },
                             new Label()
                             {
-                                Name = "Ilość  mleka"
+                                Name = "Ilość  mleka",
+                                Order = 2
                             },
                             new Label()
                             {
-                                Name = "Chlorek wapnia"
+                                Name = "Chlorek wapnia",
+                                Order = 3
                             },
                             new Label()
                             {
-                                Name = "Rodzaj  kultury bakteryjnej"
+                                Name = "Rodzaj  kultury bakteryjnej",
+                                Order = 4
                             },
                             new Label()
                             {
-                                Name = "Ilość kultury bakteryjnej"
+                                Name = "Ilość kultury bakteryjnej",
+                                Order = 5
                             },
                             new Label()
                             {
-                                Name = "Rodzaj  podpuszczki"
+                                Name = "Rodzaj  podpuszczki",
+                                Order = 6
                             },
                             new Label()
                             {
-                                Name = "Ilość podpuszczki"
+                                Name = "Ilość podpuszczki",
+                                Order = 7
                             },
                             new Label()
                             {
-                                Name = "Dodatki"
+                                Name = "Dodatki",
+                                Order = 8
                             }
                         }
                     },
                     new Category()
                     {
                         Name = "Warzenie",
+                        Order = 2,
                         Labels = new List<Label>()
                         {
                             new Label()
                             {
-                                Name = "Temperatura dodania kultury"
+                                Name = "Temperatura dodania kultury",
+                                Order = 1
                             },
                             new Label()
                             {
-                                Name = "Czas zakwaszania"
+                                Name = "Czas zakwaszania",
+                                Order = 2
                             },
                             new Label()
                             {
-                                Name = "Temperatura dodania podpuszczki"
+                                Name = "Temperatura dodania podpuszczki",
+                                Order = 3
                             },
                             new Label()
                             {
-                                Name = "Czas krzepnięcia"
+                                Name = "Czas krzepnięcia",
+                                Order = 4
                             }
                         }
                     },
                     new Category()
                     {
                         Name = "Krojenie skrzepu",
+                        Order = 3,
                         Labels = new List<Label>()
                         {
                             new Label()
                             {
-                                Name = "Rozmiar kostek skrzepu"
+                                Name = "Rozmiar kostek skrzepu",
+                                Order = 1
                             },
                             new Label()
                             {
-                                Name = "Czas obkurczania skrzepu"
+                                Name = "Czas obkurczania skrzepu",
+                                Order = 2
                             }
                         }
                     },
                     new Category()
                     {
-                        Name = "Formowanie sera", 
+                        Name = "Formowanie sera",
+                        Order = 4,
                         Labels = new List<Label>()
                         {
                             new Label()
                             {
-                                Name = "Czas formowania"
+                                Name = "Czas formowania",
+                                Order = 1
                             },
                             new Label()
                             {
-                                Name = "Temperatura formowania"
+                                Name = "Temperatura formowania",
+                                Order = 2
                             }
                         }
                     },
                     new Category()
                     {
                         Name = "Solenie sera",
+                        Order = 5,
                         Labels = new List<Label>()
                         {
                             new Label()
                             {
-                                Name = "Ilość soli w solance"
+                                Name = "Ilość soli w solance",
+                                Order = 1
                             },
                             new Label()
                             {
-                                Name = "Ilość wody w solance"
+                                Name = "Ilość wody w solance",
+                                Order = 2
                             },
                             new Label()
                             {
-                                Name = "Czas solenia"
+                                Name = "Czas solenia",
+                                Order = 3
                             }
                         }
                     },
                     new Category()
                     {
                         Name = "Obserwacje",
+                        Order = 6,
                         Labels = new List<Label>()
                         {
                             new Label()
                             {
-                                Name = "Degustacja"
+                                Name = "Degustacja",
+                                Order = 1
                             },
                             new Label()
                             {
-                                Name = "Komentarz"
+                                Name = "Komentarz",
+                                Order = 2
                             }
                         }
                     }
