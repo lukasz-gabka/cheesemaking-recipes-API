@@ -1,4 +1,6 @@
-﻿using Cheesemaking_recipes_API.Entities;
+﻿using AutoMapper;
+using Cheesemaking_recipes_API.Entities;
+using Cheesemaking_recipes_API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -10,14 +12,16 @@ namespace Cheesemaking_recipes_API.Controllers
     public class TemplateController : ControllerBase
     {
         private readonly ApiDbContext _dbContext;
+        private readonly IMapper _mapper;
 
-        public TemplateController(ApiDbContext dbContext)
+        public TemplateController(ApiDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Template>> Get()
+        public ActionResult<IEnumerable<TemplateDto>> Get()
         {
             var templates = _dbContext.Templates
                 .Include(t => t.Categories)
@@ -34,7 +38,9 @@ namespace Cheesemaking_recipes_API.Controllers
                 }
             }
 
-            return Ok(templates);
+            var templatesDtos = _mapper.Map<List<TemplateDto>>(templates);
+
+            return Ok(templatesDtos);
         }
     }
 }
