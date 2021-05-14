@@ -42,5 +42,26 @@ namespace Cheesemaking_recipes_API.Controllers
 
             return Ok(templatesDtos);
         }
+
+        [HttpPost]
+        public ActionResult Create([FromBody] CreateTemplateDto dto)
+        {
+            var template = _mapper.Map<Template>(dto);
+
+            for (var i = 0; i < template.Categories.Count; i++)
+            {
+                template.Categories[i].Order = i + 1;
+
+                for (var j = 0; j < template.Categories[i].Labels.Count; j++)
+                {
+                    template.Categories[i].Labels[j].Order = j + 1;
+                }
+            }
+
+            _dbContext.Add(template);
+            _dbContext.SaveChanges();
+
+            return Ok();
+        }
     }
 }

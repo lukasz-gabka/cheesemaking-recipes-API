@@ -32,6 +32,7 @@ namespace Cheesemaking_recipes_API
                 }
             }
         }
+
         private Template GetDefaultTemplate()
         {
             return new Template()
