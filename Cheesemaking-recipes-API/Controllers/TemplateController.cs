@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using Cheesemaking_recipes_API.Entities;
-using Cheesemaking_recipes_API.Models;
+﻿using Cheesemaking_recipes_API.Models;
 using Cheesemaking_recipes_API.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -10,14 +8,10 @@ namespace Cheesemaking_recipes_API.Controllers
     [Route("[Controller]")]
     public class TemplateController : ControllerBase
     {
-        private readonly ApiDbContext _dbContext;
-        private readonly IMapper _mapper;
         private readonly TemplateService _service;
 
-        public TemplateController(ApiDbContext dbContext, IMapper mapper, TemplateService service)
+        public TemplateController(TemplateService service)
         {
-            _dbContext = dbContext;
-            _mapper = mapper;
             _service = service;
         }
 

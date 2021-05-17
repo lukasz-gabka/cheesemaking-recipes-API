@@ -21,27 +21,13 @@ namespace Cheesemaking_recipes_API.Services
         public List<TemplateDto> Get()
         {
             var templates = _dbContext.Templates
-                .Include(t => t.Categories)
-                .ThenInclude(c => c.Labels)
+                .Include(t => t.Categories.OrderBy(c => c.Order))
+                .ThenInclude(c => c.Labels.OrderBy(l => l.Order))
                 .ToList();
 
             var templatesDtos = _mapper.Map<List<TemplateDto>>(templates);
-            SortProperties(templatesDtos);
 
             return templatesDtos;
-        }
-
-        public void SortProperties(List<TemplateDto> dtos)
-        {
-            foreach (var template in dtos)
-            {
-                template.Categories = template.Categories.OrderBy(c => c.Order).ToList();
-
-                foreach (var category in template.Categories)
-                {
-                    category.Labels = category.Labels.OrderBy(l => l.Order).ToList();
-                }
-            }
         }
 
         public void Create(CreateTemplateDto dto)
