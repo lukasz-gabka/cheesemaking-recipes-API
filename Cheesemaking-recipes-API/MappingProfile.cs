@@ -12,7 +12,7 @@ namespace Cheesemaking_recipes_API
             CreateMap<Template, TemplateDto>();
             CreateMap<Category, CategoryDto>();
             CreateMap<Label, LabelDto>();
-            CreateMap<Input, InputDto>();
+            CreateMap<Input, InputDto>().ReverseMap();
             CreateMap<CreateTemplateDto, Template>();
             CreateMap<CreateCategoryDto, Category>();
             CreateMap<CreateLabelDto, Label>();

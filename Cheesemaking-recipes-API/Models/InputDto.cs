@@ -4,6 +4,6 @@
     {
         public int Id { get; set; }
         public string Value { get; set; }
-        public NoteDto Note { get; set; }
+        public int Order { get; set; }
     }
 }
