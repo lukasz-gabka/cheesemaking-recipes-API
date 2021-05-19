@@ -18,15 +18,22 @@ namespace Cheesemaking_recipes_API.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<TemplateDto>> Get()
         {
-            var templatesDtos = _service.Get();
+            var templatesDtos = _service.GetAll();
             return Ok(templatesDtos);
+        }
+
+        [HttpGet("{templateId}")]
+        public ActionResult<TemplateDto> Get([FromRoute] int templateId)
+        {
+            var templateDto = _service.GetById(templateId);
+            return Ok(templateDto);
         }
 
         [HttpPost]
         public ActionResult Create([FromBody] CreateTemplateDto dto)
         {
-            _service.Create(dto);
-            return Ok();
+            int id = _service.Create(dto);
+            return Created($"template/{id}", null);
         }
     }
 }

@@ -18,7 +18,7 @@ namespace Cheesemaking_recipes_API.Services
             _mapper = mapper;
         }
 
-        public List<TemplateDto> Get()
+        public List<TemplateDto> GetAll()
         {
             var templates = _dbContext.Templates
                 .Include(t => t.Categories.OrderBy(c => c.Order))
@@ -30,13 +30,28 @@ namespace Cheesemaking_recipes_API.Services
             return templatesDtos;
         }
 
-        public void Create(CreateTemplateDto dto)
+        public TemplateDto GetById(int id)
+        {
+            var template = _dbContext.Templates
+                .Include(t => t.Categories.OrderBy(c => c.Order))
+                .ThenInclude(c => c.Labels.OrderBy(l => l.Order))
+                .Where(t => t.Id == id)
+                .SingleOrDefault();
+
+            var templateDto = _mapper.Map<TemplateDto>(template);
+
+            return templateDto;
+        }
+
+        public int Create(CreateTemplateDto dto)
         {
             var template = _mapper.Map<Template>(dto);
             CountProperties(template);
 
             _dbContext.Add(template);
             _dbContext.SaveChanges();
+
+            return template.Id;
         }
 
         private void CountProperties(Template template)

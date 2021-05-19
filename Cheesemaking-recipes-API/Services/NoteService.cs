@@ -20,7 +20,7 @@ namespace Cheesemaking_recipes_API.Services
             _mapper = mapper;
         }
 
-        public List<NoteDto> Get()
+        public List<NoteDto> GetAll()
         {
             var notes = _dbContext.Notes
                 .Include(n => n.Inputs)
@@ -34,7 +34,22 @@ namespace Cheesemaking_recipes_API.Services
             return notesDtos;
         }
 
-        public void Create(CreateNoteDto dto, int templateId)
+        public NoteDto GetById(int id)
+        {
+            var note = _dbContext.Notes
+                .Include(n => n.Inputs)
+                .Include(n => n.Template)
+                .ThenInclude(t => t.Categories.OrderBy(c => c.Order))
+                .ThenInclude(c => c.Labels.OrderBy(l => l.Order))
+                .Where(n => n.Id == id)
+                .SingleOrDefault();
+
+            var noteDto = _mapper.Map<NoteDto>(note);
+
+            return noteDto;
+        }
+
+        public int Create(CreateNoteDto dto, int templateId)
         {
             var template = _dbContext
                 .Templates
@@ -42,16 +57,20 @@ namespace Cheesemaking_recipes_API.Services
                 .ThenInclude(c => c.Labels.OrderBy(l => l.Order))
                 .SingleOrDefault(t => t.Id == templateId);
 
-            var note = new Note();
-            note.Name = dto.Name;
-            note.Template = template;
-
             var inputs = _mapper.Map<List<Input>>(dto.Inputs);
             CountInputs(inputs);
-            note.Inputs = inputs;
+
+            var note = new Note
+            {
+                Name = dto.Name,
+                Template = template,
+                Inputs = inputs
+            };
 
             _dbContext.Add(note);
             _dbContext.SaveChanges();
+
+            return note.Id;
         }
 
         private void CountInputs(List<Input> inputs)
