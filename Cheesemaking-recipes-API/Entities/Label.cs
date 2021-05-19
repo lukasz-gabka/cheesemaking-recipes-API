@@ -10,6 +10,5 @@ namespace Cheesemaking_recipes_API.Entities
         public int CategoryId { get; set; }
         [JsonIgnore]
         public virtual Category Category { get; set; }
-        public virtual Input Input { get; set; }
     }
 }

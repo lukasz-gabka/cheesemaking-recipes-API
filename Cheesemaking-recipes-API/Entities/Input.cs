@@ -6,8 +6,9 @@ namespace Cheesemaking_recipes_API.Entities
     {
         public int Id { get; set; }
         public string Value { get; set; }
-        public int LabelId { get; set; }
+        public int Order { get; set; }
+        public int NoteId { get; set; }
         [JsonIgnore]
-        public virtual Label Label { get; set; }
+        public virtual Note Note { get; set; }
     }
 }
