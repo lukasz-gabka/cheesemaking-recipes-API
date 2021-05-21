@@ -2,12 +2,10 @@
 
 namespace Cheesemaking_recipes_API.Models
 {
-    public class LabelDto
+    public class CreateLabelDto
     {
-        public int Id { get; set; }
         [Required]
         [MaxLength(100)]
         public string Name { get; set; }
-        public int Order { get; set; }
     }
 }

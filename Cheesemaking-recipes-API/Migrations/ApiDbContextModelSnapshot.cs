@@ -48,7 +48,10 @@ namespace Cheesemaking_recipes_API.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("LabelId")
+                    b.Property<int>("NoteId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Order")
                         .HasColumnType("int");
 
                     b.Property<string>("Value")
@@ -56,8 +59,7 @@ namespace Cheesemaking_recipes_API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LabelId")
-                        .IsUnique();
+                    b.HasIndex("NoteId");
 
                     b.ToTable("Inputs");
                 });
@@ -100,8 +102,7 @@ namespace Cheesemaking_recipes_API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TemplateId")
-                        .IsUnique();
+                    b.HasIndex("TemplateId");
 
                     b.ToTable("Notes");
                 });
@@ -134,13 +135,13 @@ namespace Cheesemaking_recipes_API.Migrations
 
             modelBuilder.Entity("Cheesemaking_recipes_API.Entities.Input", b =>
                 {
-                    b.HasOne("Cheesemaking_recipes_API.Entities.Label", "Label")
-                        .WithOne("Input")
-                        .HasForeignKey("Cheesemaking_recipes_API.Entities.Input", "LabelId")
+                    b.HasOne("Cheesemaking_recipes_API.Entities.Note", "Note")
+                        .WithMany("Inputs")
+                        .HasForeignKey("NoteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Label");
+                    b.Navigation("Note");
                 });
 
             modelBuilder.Entity("Cheesemaking_recipes_API.Entities.Label", b =>
@@ -157,8 +158,8 @@ namespace Cheesemaking_recipes_API.Migrations
             modelBuilder.Entity("Cheesemaking_recipes_API.Entities.Note", b =>
                 {
                     b.HasOne("Cheesemaking_recipes_API.Entities.Template", "Template")
-                        .WithOne("Note")
-                        .HasForeignKey("Cheesemaking_recipes_API.Entities.Note", "TemplateId")
+                        .WithMany("Notes")
+                        .HasForeignKey("TemplateId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -170,16 +171,16 @@ namespace Cheesemaking_recipes_API.Migrations
                     b.Navigation("Labels");
                 });
 
-            modelBuilder.Entity("Cheesemaking_recipes_API.Entities.Label", b =>
+            modelBuilder.Entity("Cheesemaking_recipes_API.Entities.Note", b =>
                 {
-                    b.Navigation("Input");
+                    b.Navigation("Inputs");
                 });
 
             modelBuilder.Entity("Cheesemaking_recipes_API.Entities.Template", b =>
                 {
                     b.Navigation("Categories");
 
-                    b.Navigation("Note");
+                    b.Navigation("Notes");
                 });
 #pragma warning restore 612, 618
         }

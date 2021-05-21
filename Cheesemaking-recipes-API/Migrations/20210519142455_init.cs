@@ -2,7 +2,7 @@
 
 namespace Cheesemaking_recipes_API.Migrations
 {
-    public partial class Init : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -26,6 +26,7 @@ namespace Cheesemaking_recipes_API.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Order = table.Column<int>(type: "int", nullable: false),
                     TemplateId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -66,6 +67,7 @@ namespace Cheesemaking_recipes_API.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Order = table.Column<int>(type: "int", nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -86,15 +88,16 @@ namespace Cheesemaking_recipes_API.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Value = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LabelId = table.Column<int>(type: "int", nullable: false)
+                    Order = table.Column<int>(type: "int", nullable: false),
+                    NoteId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Inputs", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Inputs_Labels_LabelId",
-                        column: x => x.LabelId,
-                        principalTable: "Labels",
+                        name: "FK_Inputs_Notes_NoteId",
+                        column: x => x.NoteId,
+                        principalTable: "Notes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -105,10 +108,9 @@ namespace Cheesemaking_recipes_API.Migrations
                 column: "TemplateId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Inputs_LabelId",
+                name: "IX_Inputs_NoteId",
                 table: "Inputs",
-                column: "LabelId",
-                unique: true);
+                column: "NoteId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Labels_CategoryId",
@@ -118,8 +120,7 @@ namespace Cheesemaking_recipes_API.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Notes_TemplateId",
                 table: "Notes",
-                column: "TemplateId",
-                unique: true);
+                column: "TemplateId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -128,10 +129,10 @@ namespace Cheesemaking_recipes_API.Migrations
                 name: "Inputs");
 
             migrationBuilder.DropTable(
-                name: "Notes");
+                name: "Labels");
 
             migrationBuilder.DropTable(
-                name: "Labels");
+                name: "Notes");
 
             migrationBuilder.DropTable(
                 name: "Categories");

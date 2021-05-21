@@ -1,4 +1,5 @@
 using Cheesemaking_recipes_API.Entities;
+using Cheesemaking_recipes_API.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +26,8 @@ namespace Cheesemaking_recipes_API
                 options.UseSqlServer(Configuration.GetConnectionString("ApiConnectionString")));
             services.AddAutoMapper(this.GetType().Assembly);
             services.AddScoped<DbSeeder>();
+            services.AddScoped<TemplateService>();
+            services.AddScoped<NoteService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
