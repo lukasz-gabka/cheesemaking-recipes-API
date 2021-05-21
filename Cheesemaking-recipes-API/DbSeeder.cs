@@ -63,7 +63,7 @@ namespace Cheesemaking_recipes_API
                             },
                             new Label()
                             {
-                                Name = "Rodzaj  kultury bakteryjnej",
+                                Name = "Rodzaj kultury bakteryjnej",
                                 Order = 4
                             },
                             new Label()

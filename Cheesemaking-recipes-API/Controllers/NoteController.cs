@@ -6,6 +6,7 @@ using System.Collections.Generic;
 namespace Cheesemaking_recipes_API.Controllers
 {
     [Route("[Controller]")]
+    [ApiController]
     public class NoteController : ControllerBase
     {
         private readonly NoteService _service;
