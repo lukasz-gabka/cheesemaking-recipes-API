@@ -67,6 +67,17 @@ namespace Cheesemaking_recipes_API.Services
                 Inputs = inputs
             };
 
+            var labelCounter = 0;
+            foreach(var category in note.Template.Categories)
+            {
+                labelCounter += category.Labels.Count;
+            }
+
+            if (note.Inputs.Count != labelCounter)
+            {
+                throw new Exception("Number of inputs did not match number of labels");
+            }
+
             _dbContext.Add(note);
             _dbContext.SaveChanges();
 

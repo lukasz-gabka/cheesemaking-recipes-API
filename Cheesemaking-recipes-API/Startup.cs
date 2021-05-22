@@ -28,6 +28,7 @@ namespace Cheesemaking_recipes_API
             services.AddScoped<DbSeeder>();
             services.AddScoped<TemplateService>();
             services.AddScoped<NoteService>();
+            services.AddScoped<ErrorHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -38,6 +39,7 @@ namespace Cheesemaking_recipes_API
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseMiddleware<ErrorHandler>();
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseEndpoints(endpoints =>
