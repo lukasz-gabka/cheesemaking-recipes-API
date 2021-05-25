@@ -1,7 +1,11 @@
 using Cheesemaking_recipes_API.Entities;
+using Cheesemaking_recipes_API.Models;
 using Cheesemaking_recipes_API.Services;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,7 +25,7 @@ namespace Cheesemaking_recipes_API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().AddFluentValidation();
             services.AddDbContext<ApiDbContext>(options => 
                 options.UseSqlServer(Configuration.GetConnectionString("ApiConnectionString")));
             services.AddAutoMapper(this.GetType().Assembly);
@@ -29,6 +33,9 @@ namespace Cheesemaking_recipes_API
             services.AddScoped<TemplateService>();
             services.AddScoped<NoteService>();
             services.AddScoped<ErrorHandler>();
+            services.AddScoped<PasswordHasher<User>>();
+            services.AddScoped<UserService>();
+            services.AddScoped<IValidator<RegistrationDto>, RegistrationDtoValidator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
