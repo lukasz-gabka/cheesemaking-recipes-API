@@ -13,5 +13,6 @@ namespace Cheesemaking_recipes_API.Entities
         public DbSet<Category> Categories { get; set; }
         public DbSet<Label> Labels { get; set; }
         public DbSet<Input> Inputs { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }

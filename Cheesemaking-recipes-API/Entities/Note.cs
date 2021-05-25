@@ -9,5 +9,6 @@ namespace Cheesemaking_recipes_API.Entities
         public int TemplateId { get; set; }
         public virtual Template Template { get; set; }
         public virtual List<Input> Inputs { get; set; }
+        public int UserId { get; set; }
     }
 }
