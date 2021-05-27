@@ -10,6 +10,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace Cheesemaking_recipes_API
 {
@@ -26,7 +28,7 @@ namespace Cheesemaking_recipes_API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers().AddFluentValidation();
-            services.AddDbContext<ApiDbContext>(options => 
+            services.AddDbContext<ApiDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("ApiConnectionString")));
             services.AddAutoMapper(this.GetType().Assembly);
             services.AddScoped<DbSeeder>();
@@ -36,6 +38,8 @@ namespace Cheesemaking_recipes_API
             services.AddScoped<PasswordHasher<User>>();
             services.AddScoped<UserService>();
             services.AddScoped<IValidator<RegistrationDto>, RegistrationDtoValidator>();
+            services.AddScoped<IValidator<LoginDto>, LoginDtoValidator>();
+            AddAuthentication(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,11 +51,38 @@ namespace Cheesemaking_recipes_API
                 app.UseDeveloperExceptionPage();
             }
             app.UseMiddleware<ErrorHandler>();
+            app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseRouting();
+            app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+        }
+
+        private void AddAuthentication(IServiceCollection services)
+        {
+            var authenticationSettings = new AuthenticationSettings();
+            Configuration.GetSection("Authentication").Bind(authenticationSettings);
+            services.AddSingleton(authenticationSettings);
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = "Bearer";
+                options.DefaultScheme = "Bearer";
+                options.DefaultChallengeScheme = "Bearer";
+            }).AddJwtBearer(cfg =>
+            {
+                cfg.RequireHttpsMetadata = true;
+                cfg.SaveToken = true;
+                cfg.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidIssuer = authenticationSettings.JwtIssuer,
+                    ValidAudience = authenticationSettings.JwtIssuer,
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(authenticationSettings.JwtKey))
+                };
             });
         }
     }

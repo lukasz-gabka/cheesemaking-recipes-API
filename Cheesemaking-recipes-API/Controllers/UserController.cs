@@ -21,5 +21,12 @@ namespace Cheesemaking_recipes_API.Controllers
             _service.Register(dto);
             return Ok();
         }
+
+        [HttpGet]
+        public ActionResult<string> Login([FromBody] LoginDto dto)
+        {
+            var token = _service.Login(dto);
+            return Ok(token);
+        }
     }
 }
