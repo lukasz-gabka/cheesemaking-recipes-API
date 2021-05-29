@@ -39,6 +39,7 @@ namespace Cheesemaking_recipes_API
             services.AddScoped<UserService>();
             services.AddScoped<IValidator<RegistrationDto>, RegistrationDtoValidator>();
             services.AddScoped<IValidator<LoginDto>, LoginDtoValidator>();
+            services.AddScoped<UserContextService>();
             AddAuthentication(services);
         }
 

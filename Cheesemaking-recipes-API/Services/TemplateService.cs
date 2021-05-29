@@ -11,11 +11,13 @@ namespace Cheesemaking_recipes_API.Services
     {
         private readonly ApiDbContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly UserContextService _contextService;
 
-        public TemplateService(ApiDbContext dbContext, IMapper mapper)
+        public TemplateService(ApiDbContext dbContext, IMapper mapper, UserContextService contextService)
         {
             _dbContext = dbContext;
             _mapper = mapper;
+            _contextService = contextService;
         }
 
         public List<TemplateDto> GetAll()
@@ -23,6 +25,7 @@ namespace Cheesemaking_recipes_API.Services
             var templates = _dbContext.Templates
                 .Include(t => t.Categories.OrderBy(c => c.Order))
                 .ThenInclude(c => c.Labels.OrderBy(l => l.Order))
+                .Where(t => t.UserId == _contextService.GetUserId)
                 .ToList();
 
             var templatesDtos = _mapper.Map<List<TemplateDto>>(templates);
@@ -36,6 +39,7 @@ namespace Cheesemaking_recipes_API.Services
                 .Include(t => t.Categories.OrderBy(c => c.Order))
                 .ThenInclude(c => c.Labels.OrderBy(l => l.Order))
                 .Where(t => t.Id == id)
+                .Where(t => t.UserId == _contextService.GetUserId)
                 .SingleOrDefault();
 
             var templateDto = _mapper.Map<TemplateDto>(template);
@@ -46,6 +50,7 @@ namespace Cheesemaking_recipes_API.Services
         public int Create(CreateTemplateDto dto)
         {
             var template = _mapper.Map<Template>(dto);
+            template.UserId = _contextService.GetUserId;
             CountProperties(template);
 
             _dbContext.Add(template);
@@ -65,6 +70,11 @@ namespace Cheesemaking_recipes_API.Services
                     template.Categories[i].Labels[j].Order = j + 1;
                 }
             }
+        }
+
+        private int GetUserId()
+        {
+            return (int) _contextService.GetUserId;
         }
     }
 }
