@@ -16,6 +16,7 @@ namespace Cheesemaking_recipes_API
             CreateMap<CreateTemplateDto, Template>();
             CreateMap<CreateCategoryDto, Category>();
             CreateMap<CreateLabelDto, Label>();
+            CreateMap<RegistrationDto, User>();
         }
     }
 }

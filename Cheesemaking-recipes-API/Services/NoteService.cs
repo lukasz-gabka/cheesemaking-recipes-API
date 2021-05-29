@@ -1,11 +1,10 @@
 ﻿using AutoMapper;
 using Cheesemaking_recipes_API.Entities;
+using Cheesemaking_recipes_API.Exceptions;
 using Cheesemaking_recipes_API.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Cheesemaking_recipes_API.Services
 {
@@ -13,11 +12,13 @@ namespace Cheesemaking_recipes_API.Services
     {
         private readonly ApiDbContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly UserContextService _contextService;
 
-        public NoteService(ApiDbContext dbContext, IMapper mapper)
+        public NoteService(ApiDbContext dbContext, IMapper mapper, UserContextService contextService)
         {
             _dbContext = dbContext;
             _mapper = mapper;
+            _contextService = contextService;
         }
 
         public List<NoteDto> GetAll()
@@ -27,6 +28,7 @@ namespace Cheesemaking_recipes_API.Services
                 .Include(n => n.Template)
                 .ThenInclude(t => t.Categories.OrderBy(c => c.Order))
                 .ThenInclude(c => c.Labels.OrderBy(l => l.Order))
+                .Where(n => n.UserId == _contextService.GetUserId)
                 .ToList();
 
             var notesDtos = _mapper.Map<List<NoteDto>>(notes);
@@ -42,6 +44,7 @@ namespace Cheesemaking_recipes_API.Services
                 .ThenInclude(t => t.Categories.OrderBy(c => c.Order))
                 .ThenInclude(c => c.Labels.OrderBy(l => l.Order))
                 .Where(n => n.Id == id)
+                .Where(n => n.UserId == _contextService.GetUserId)
                 .SingleOrDefault();
 
             var noteDto = _mapper.Map<NoteDto>(note);
@@ -55,7 +58,14 @@ namespace Cheesemaking_recipes_API.Services
                 .Templates
                 .Include(t => t.Categories.OrderBy(c => c.Order))
                 .ThenInclude(c => c.Labels.OrderBy(l => l.Order))
-                .SingleOrDefault(t => t.Id == templateId);
+                .Where(t => t.UserId == _contextService.GetUserId)
+                .Where(t => t.Id == templateId)
+                .SingleOrDefault();
+
+            if (template is null)
+            {
+                throw new BadRequestException("Template not found");
+            }
 
             var inputs = _mapper.Map<List<Input>>(dto.Inputs);
             CountInputs(inputs);
@@ -64,7 +74,8 @@ namespace Cheesemaking_recipes_API.Services
             {
                 Name = dto.Name,
                 Template = template,
-                Inputs = inputs
+                Inputs = inputs,
+                UserId = _contextService.GetUserId
             };
 
             var labelCounter = 0;
@@ -75,7 +86,7 @@ namespace Cheesemaking_recipes_API.Services
 
             if (note.Inputs.Count != labelCounter)
             {
-                throw new Exception("Number of inputs did not match number of labels");
+                throw new BadRequestException("Number of inputs does not match number of labels");
             }
 
             _dbContext.Add(note);

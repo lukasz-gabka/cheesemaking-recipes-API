@@ -10,5 +10,6 @@ namespace Cheesemaking_recipes_API.Entities
         public virtual List<Category> Categories { get; set; }
         [JsonIgnore]
         public virtual List<Note> Notes { get; set; }
+        public int UserId { get; set; }
     }
 }

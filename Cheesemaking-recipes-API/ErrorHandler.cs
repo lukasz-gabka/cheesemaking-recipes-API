@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Cheesemaking_recipes_API
@@ -24,6 +22,12 @@ namespace Cheesemaking_recipes_API
                 await next.Invoke(context);
             }
             catch (InputCountException e)
+            {
+                _logger.LogError(e, e.Message);
+                context.Response.StatusCode = 400;
+                await context.Response.WriteAsync(e.Message);
+            }
+            catch (BadRequestException e)
             {
                 _logger.LogError(e, e.Message);
                 context.Response.StatusCode = 400;

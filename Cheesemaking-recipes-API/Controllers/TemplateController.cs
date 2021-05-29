@@ -1,5 +1,6 @@
 ﻿using Cheesemaking_recipes_API.Models;
 using Cheesemaking_recipes_API.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
@@ -7,6 +8,7 @@ namespace Cheesemaking_recipes_API.Controllers
 {
     [Route("[Controller]")]
     [ApiController]
+    [Authorize]
     public class TemplateController : ControllerBase
     {
         private readonly TemplateService _service;
