@@ -19,17 +19,20 @@ namespace Cheesemaking_recipes_API.Services
         private readonly PasswordHasher<User> _hasher;
         private readonly ApiDbContext _dbcontext;
         private readonly AuthenticationSettings _authenticationSettings;
+        private readonly TemplateService _templateService;
 
         public UserService(
             IMapper mapper, 
             PasswordHasher<User> hasher, 
             ApiDbContext context, 
-            AuthenticationSettings authenticationSettings)
+            AuthenticationSettings authenticationSettings,
+            TemplateService templateService)
         {
             _mapper = mapper;
             _hasher = hasher;
             _dbcontext = context;
             _authenticationSettings = authenticationSettings;
+            _templateService = templateService;
         }
 
         public void Register(RegistrationDto dto)
@@ -40,9 +43,10 @@ namespace Cheesemaking_recipes_API.Services
 
             _dbcontext.Users.Add(user);
             _dbcontext.SaveChanges();
+            _templateService.CreateDefaultTemplateForNewUser(user.Id);
         }
 
-        internal string Login(LoginDto dto)
+        public string Login(LoginDto dto)
         {
             var user = _dbcontext.Users.FirstOrDefault(u => u.Email == dto.Email);
 

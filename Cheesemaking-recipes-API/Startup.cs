@@ -31,7 +31,6 @@ namespace Cheesemaking_recipes_API
             services.AddDbContext<ApiDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("ApiConnectionString")));
             services.AddAutoMapper(this.GetType().Assembly);
-            services.AddScoped<DbSeeder>();
             services.AddScoped<TemplateService>();
             services.AddScoped<NoteService>();
             services.AddScoped<ErrorHandler>();
@@ -44,9 +43,8 @@ namespace Cheesemaking_recipes_API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DbSeeder seeder)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            seeder.Seed();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

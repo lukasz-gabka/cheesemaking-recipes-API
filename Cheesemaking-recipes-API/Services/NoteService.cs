@@ -3,7 +3,6 @@ using Cheesemaking_recipes_API.Entities;
 using Cheesemaking_recipes_API.Exceptions;
 using Cheesemaking_recipes_API.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -87,7 +86,7 @@ namespace Cheesemaking_recipes_API.Services
 
             if (note.Inputs.Count != labelCounter)
             {
-                throw new Exception("Number of inputs does not match number of labels");
+                throw new BadRequestException("Number of inputs does not match number of labels");
             }
 
             _dbContext.Add(note);
