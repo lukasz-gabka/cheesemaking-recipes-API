@@ -52,14 +52,14 @@ namespace Cheesemaking_recipes_API.Services
 
             if (user is null)
             {
-                throw new BadRequestException("User does not exist");
+                throw new BadRequestException("Użytkownik o podanym adresie e-mail nie istnieje");
             }
 
             var isPasswordCorrect = _hasher.VerifyHashedPassword(user, user.PasswordHash, dto.Password);
 
             if (isPasswordCorrect == PasswordVerificationResult.Failed)
             {
-                throw new BadRequestException("Incorrect password");
+                throw new BadRequestException("Wprowadzono nieprawidłowe hasło");
             }
 
             string token = GenerateToken(user);

@@ -40,11 +40,16 @@ namespace Cheesemaking_recipes_API
             services.AddScoped<IValidator<LoginDto>, LoginDtoValidator>();
             services.AddScoped<UserContextService>();
             AddAuthentication(services);
+            services.AddCors(options => {
+                options.AddPolicy("ReactApp", builder =>
+                    builder.AllowAnyMethod().AllowAnyHeader().WithOrigins(Configuration["AllowedOrigins"]));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseCors("ReactApp");
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

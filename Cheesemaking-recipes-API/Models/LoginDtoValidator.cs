@@ -9,13 +9,13 @@ namespace Cheesemaking_recipes_API.Models
             RuleFor(r => r.Email)
                 .NotEmpty()
                 .EmailAddress()
-                .WithMessage("Please enter a valid email address");
+                .WithMessage("Wprowadzono niepoprawny adres e-mail");
 
             RuleFor(r => r.Password)
                 .NotEmpty()
                 .MinimumLength(6)
                 .MaximumLength(20)
-                .WithMessage("The password must contain 6-20 characters");
+                .WithMessage("Hasło musi się składać z 6-20 znaków");
         }
     }
 }
