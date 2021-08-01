@@ -22,7 +22,13 @@ namespace Cheesemaking_recipes_API.Controllers
         public ActionResult<IEnumerable<NoteDto>> Get()
         {
             var notesDtos = _service.GetAll();
+            if (notesDtos is null || notesDtos.Count == 0)
+            {
+                return NoContent();
+            }
+
             return Ok(notesDtos);
+
         }
 
         [HttpGet("{noteId}")]
@@ -37,6 +43,19 @@ namespace Cheesemaking_recipes_API.Controllers
         {
             int id = _service.Create(dto, templateId);
             return Created($"note/{id}", null);
+        }
+
+        [HttpDelete("{noteId}")]
+        public ActionResult Delete([FromRoute] int noteId)
+        {
+            var isDeleted = _service.Delete(noteId);
+
+            if (isDeleted)
+            {
+                return NoContent();
+            }
+
+            return NotFound();
         }
     }
 }

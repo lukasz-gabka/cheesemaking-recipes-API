@@ -52,6 +52,22 @@ namespace Cheesemaking_recipes_API.Services
             return noteDto;
         }
 
+        public bool Delete(int noteId)
+        {
+            var note = _dbContext.Notes
+                .FirstOrDefault(n => n.Id == noteId);
+
+            if (note is null)
+            {
+                return false;
+            }
+
+            _dbContext.Notes.Remove(note);
+            _dbContext.SaveChanges();
+
+            return true;
+        }
+
         public int Create(CreateNoteDto dto, int templateId)
         {
             var template = _dbContext
