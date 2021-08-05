@@ -24,7 +24,7 @@ namespace Cheesemaking_recipes_API.Services
         public List<NoteDto> GetAll()
         {
             var notes = _dbContext.Notes
-                .Include(n => n.Inputs)
+                .Include(n => n.Inputs.OrderBy(i => i.Order))
                 .Include(n => n.Template)
                 .ThenInclude(t => t.Categories.OrderBy(c => c.Order))
                 .ThenInclude(c => c.Labels.OrderBy(l => l.Order))
@@ -39,7 +39,7 @@ namespace Cheesemaking_recipes_API.Services
         public NoteDto GetById(int id)
         {
             var note = _dbContext.Notes
-                .Include(n => n.Inputs)
+                .Include(n => n.Inputs.OrderBy(i => i.Order))
                 .Include(n => n.Template)
                 .ThenInclude(t => t.Categories.OrderBy(c => c.Order))
                 .ThenInclude(c => c.Labels.OrderBy(l => l.Order))
@@ -52,9 +52,41 @@ namespace Cheesemaking_recipes_API.Services
             return noteDto;
         }
 
+        public bool Update(int noteId, List<UpdateInputDto> inputs)
+        {
+            var note = _dbContext.Notes
+                .Include(n => n.Inputs.OrderBy(i => i.Order))
+                .Include(n => n.Template)
+                .ThenInclude(t => t.Categories.OrderBy(c => c.Order))
+                .ThenInclude(c => c.Labels.OrderBy(l => l.Order))
+                .Where(n => n.Id == noteId)
+                .Where(n => n.UserId == _contextService.GetUserId)
+                .SingleOrDefault();
+
+            if (note is null)
+            {
+                return false;
+            }
+
+            if(note.Inputs.Count != inputs.Count)
+            {
+                throw new BadRequestException("Number of inputs does not match number of labels");
+            }
+
+            for (int i = 0; i < note.Inputs.Count; i++)
+            {
+                note.Inputs[i].Value = inputs[i].Value;
+            }
+
+            _dbContext.SaveChanges();
+
+            return true;
+        }
+
         public bool Delete(int noteId)
         {
             var note = _dbContext.Notes
+                .Where(n => n.UserId == _contextService.GetUserId)
                 .FirstOrDefault(n => n.Id == noteId);
 
             if (note is null)
