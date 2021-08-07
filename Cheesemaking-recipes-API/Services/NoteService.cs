@@ -52,7 +52,7 @@ namespace Cheesemaking_recipes_API.Services
             return noteDto;
         }
 
-        public bool Update(int noteId, List<UpdateInputDto> inputs)
+        public bool Update(int noteId, UpdateNoteDto dto)
         {
             var note = _dbContext.Notes
                 .Include(n => n.Inputs.OrderBy(i => i.Order))
@@ -68,14 +68,15 @@ namespace Cheesemaking_recipes_API.Services
                 return false;
             }
 
-            if(note.Inputs.Count != inputs.Count)
+            if(note.Inputs.Count != dto.Inputs.Count)
             {
                 throw new BadRequestException("Number of inputs does not match number of labels");
             }
 
+            note.Name = dto.Name;
             for (int i = 0; i < note.Inputs.Count; i++)
             {
-                note.Inputs[i].Value = inputs[i].Value;
+                note.Inputs[i].Value = dto.Inputs[i].Value;
             }
 
             _dbContext.SaveChanges();

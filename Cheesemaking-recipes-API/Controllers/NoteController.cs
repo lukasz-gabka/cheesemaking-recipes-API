@@ -59,13 +59,13 @@ namespace Cheesemaking_recipes_API.Controllers
         }
 
         [HttpPut("{noteId}")]
-        public ActionResult Update([FromRoute] int noteId, [FromBody] List<UpdateInputDto> inputs)
+        public ActionResult Update([FromRoute] int noteId, [FromBody] UpdateNoteDto noteDto)
         {
-            var isUpdated = _service.Update(noteId, inputs);
+            var isUpdated = _service.Update(noteId, noteDto);
 
             if (isUpdated)
             {
-                return Ok();
+                return NoContent();
             }
 
             return NotFound();
