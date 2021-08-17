@@ -38,5 +38,18 @@ namespace Cheesemaking_recipes_API.Controllers
             int id = _service.Create(dto);
             return Created($"template/{id}", null);
         }
+
+        [HttpDelete("{templateId}")]
+        public ActionResult Delete([FromRoute] int templateId)
+        {
+            var isDeleted = _service.Delete(templateId);
+
+            if (isDeleted)
+            {
+                return NoContent();
+            }
+
+            return NotFound();
+        }
     }
 }

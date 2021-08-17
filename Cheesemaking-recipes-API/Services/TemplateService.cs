@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Cheesemaking_recipes_API.Entities;
+using Cheesemaking_recipes_API.Exceptions;
 using Cheesemaking_recipes_API.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -45,6 +46,33 @@ namespace Cheesemaking_recipes_API.Services
             var templateDto = _mapper.Map<TemplateDto>(template);
 
             return templateDto;
+        }
+
+        public bool Delete(int templateId)
+        {
+            var template = _dbContext.Templates
+                .Where(t => t.Id == templateId)
+                .Where(t => t.UserId == _contextService.GetUserId)
+                .SingleOrDefault();
+
+            if (template is null)
+            {
+                return false;
+            }
+
+            var note = _dbContext.Notes
+                .Where(n => n.TemplateId == templateId)
+                .FirstOrDefault();
+
+            if (note != null)
+            {
+                throw new BadRequestException("Nie można usunąć szablonu, który jest wykorzystywany przez co najmniej jedną notatkę");
+            }
+
+            _dbContext.Remove(template);
+            _dbContext.SaveChanges();
+
+            return true;
         }
 
         public int Create(CreateTemplateDto dto)
