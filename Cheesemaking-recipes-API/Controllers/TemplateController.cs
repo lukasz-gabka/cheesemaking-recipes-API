@@ -11,9 +11,9 @@ namespace Cheesemaking_recipes_API.Controllers
     [Authorize]
     public class TemplateController : ControllerBase
     {
-        private readonly TemplateService _service;
+        private readonly ITemplateService _service;
 
-        public TemplateController(TemplateService service)
+        public TemplateController(ITemplateService service)
         {
             _service = service;
         }
@@ -22,6 +22,11 @@ namespace Cheesemaking_recipes_API.Controllers
         public ActionResult<IEnumerable<TemplateDto>> Get()
         {
             var templatesDtos = _service.GetAll();
+            if (templatesDtos is null || templatesDtos.Count == 0)
+            {
+                return NoContent();
+            }
+
             return Ok(templatesDtos);
         }
 
@@ -29,6 +34,11 @@ namespace Cheesemaking_recipes_API.Controllers
         public ActionResult<TemplateDto> Get([FromRoute] int templateId)
         {
             var templateDto = _service.GetById(templateId);
+            if (templateDto is null)
+            {
+                return NoContent();
+            }
+
             return Ok(templateDto);
         }
 

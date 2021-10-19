@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Cheesemaking_recipes_API.Services
 {
-    public class NoteService
+    public class NoteService : INoteService
     {
         private readonly ApiDbContext _dbContext;
         private readonly IMapper _mapper;
@@ -68,7 +68,7 @@ namespace Cheesemaking_recipes_API.Services
                 return false;
             }
 
-            if(note.Inputs.Count != dto.Inputs.Count)
+            if (note.Inputs.Count != dto.Inputs.Count)
             {
                 throw new BadRequestException("Number of inputs does not match number of labels");
             }
@@ -103,8 +103,7 @@ namespace Cheesemaking_recipes_API.Services
 
         public int Create(CreateNoteDto dto, int templateId)
         {
-            var template = _dbContext
-                .Templates
+            var template = _dbContext.Templates
                 .Include(t => t.Categories.OrderBy(c => c.Order))
                 .ThenInclude(c => c.Labels.OrderBy(l => l.Order))
                 .Where(t => t.UserId == _contextService.GetUserId)
@@ -128,7 +127,7 @@ namespace Cheesemaking_recipes_API.Services
             };
 
             var labelCounter = 0;
-            foreach(var category in note.Template.Categories)
+            foreach (var category in note.Template.Categories)
             {
                 labelCounter += category.Labels.Count;
             }

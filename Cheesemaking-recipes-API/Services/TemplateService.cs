@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Cheesemaking_recipes_API.Services
 {
-    public class TemplateService
+    public class TemplateService : ITemplateService
     {
         private readonly ApiDbContext _dbContext;
         private readonly IMapper _mapper;

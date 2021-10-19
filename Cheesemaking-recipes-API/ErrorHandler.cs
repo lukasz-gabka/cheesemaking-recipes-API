@@ -37,7 +37,7 @@ namespace Cheesemaking_recipes_API
             {
                 _logger.LogError(e, e.Message);
                 context.Response.StatusCode = 500;
-                await context.Response.WriteAsync("Server error");
+                await context.Response.WriteAsync("Błąd serwera");
             }
         }
     }

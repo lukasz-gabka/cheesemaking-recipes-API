@@ -11,9 +11,9 @@ namespace Cheesemaking_recipes_API.Controllers
     [Authorize]
     public class NoteController : ControllerBase
     {
-        private readonly NoteService _service;
+        private readonly INoteService _service;
 
-        public NoteController(NoteService service)
+        public NoteController(INoteService service)
         {
             _service = service;
         }
@@ -35,6 +35,11 @@ namespace Cheesemaking_recipes_API.Controllers
         public ActionResult<NoteDto> Get([FromRoute] int noteId)
         {
             var noteDto = _service.GetById(noteId);
+            if (noteDto is null)
+            {
+                return NoContent();
+            }
+
             return Ok(noteDto);
         }
 

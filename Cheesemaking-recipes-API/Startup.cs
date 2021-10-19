@@ -31,25 +31,27 @@ namespace Cheesemaking_recipes_API
             services.AddDbContext<ApiDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("ApiConnectionString")));
             services.AddAutoMapper(this.GetType().Assembly);
-            services.AddScoped<TemplateService>();
-            services.AddScoped<NoteService>();
+            services.AddScoped<DbMigrator>();
+            services.AddScoped<ITemplateService, TemplateService>();
+            services.AddScoped<INoteService, NoteService>();
             services.AddScoped<ErrorHandler>();
             services.AddScoped<PasswordHasher<User>>();
-            services.AddScoped<UserService>();
+            services.AddScoped<IUserService, UserService>();
             services.AddScoped<IValidator<RegistrationDto>, RegistrationDtoValidator>();
             services.AddScoped<IValidator<LoginDto>, LoginDtoValidator>();
             services.AddScoped<UserContextService>();
             AddAuthentication(services);
             services.AddCors(options => {
                 options.AddPolicy("ReactApp", builder =>
-                    builder.AllowAnyMethod().AllowAnyHeader().WithOrigins(Configuration["AllowedOrigins"]));
+                    builder.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
             });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DbMigrator migrator)
         {
             app.UseCors("ReactApp");
+            migrator.Migrate();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
