@@ -12,9 +12,9 @@ namespace Cheesemaking_recipes_API.Services
     {
         private readonly ApiDbContext _dbContext;
         private readonly IMapper _mapper;
-        private readonly UserContextService _contextService;
+        private readonly IUserContextService _contextService;
 
-        public TemplateService(ApiDbContext dbContext, IMapper mapper, UserContextService contextService)
+        public TemplateService(ApiDbContext dbContext, IMapper mapper, IUserContextService contextService)
         {
             _dbContext = dbContext;
             _mapper = mapper;
@@ -87,7 +87,7 @@ namespace Cheesemaking_recipes_API.Services
             return template.Id;
         }
 
-        private void CountProperties(Template template)
+        private static void CountProperties(Template template)
         {
             for (var i = 0; i < template.Categories.Count; i++)
             {
@@ -105,11 +105,11 @@ namespace Cheesemaking_recipes_API.Services
             var template = GetDefaultTemplate();
             template.UserId = userId;
 
-            _dbContext.Templates.Add(template);
+            _dbContext.Add(template);
             _dbContext.SaveChanges();
         }
 
-        private Template GetDefaultTemplate()
+        private static Template GetDefaultTemplate()
         {
             return new Template()
             {

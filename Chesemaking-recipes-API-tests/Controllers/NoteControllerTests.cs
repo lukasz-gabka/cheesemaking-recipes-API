@@ -11,9 +11,9 @@ namespace Chesemaking_recipes_API_tests.Controllers
     [TestFixture]
     class NoteControllerTests
     {
-        Mock<INoteService> service;
-        NoteController controller;
-        readonly List<NoteDto> notesDtos = new List<NoteDto>()
+        private Mock<INoteService> service;
+        private NoteController controller;
+        private readonly List<NoteDto> notesDtos = new List<NoteDto>()
         {
             new NoteDto(),
             new NoteDto()

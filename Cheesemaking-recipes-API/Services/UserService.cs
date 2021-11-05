@@ -3,35 +3,29 @@ using Cheesemaking_recipes_API.Entities;
 using Cheesemaking_recipes_API.Exceptions;
 using Cheesemaking_recipes_API.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Security.Claims;
-using System.Text;
 
 namespace Cheesemaking_recipes_API.Services
 {
     public class UserService : IUserService
     {
         private readonly IMapper _mapper;
-        private readonly PasswordHasher<User> _hasher;
+        private readonly IPasswordHasher<User> _hasher;
         private readonly ApiDbContext _dbcontext;
-        private readonly AuthenticationSettings _authenticationSettings;
+        private readonly ITokenGenerator _tokenGenerator;
         private readonly ITemplateService _templateService;
 
         public UserService(
             IMapper mapper,
-            PasswordHasher<User> hasher,
+            IPasswordHasher<User> hasher,
             ApiDbContext context,
-            AuthenticationSettings authenticationSettings,
+            ITokenGenerator tokenGenerator,
             ITemplateService templateService)
         {
             _mapper = mapper;
             _hasher = hasher;
             _dbcontext = context;
-            _authenticationSettings = authenticationSettings;
+            _tokenGenerator = tokenGenerator;
             _templateService = templateService;
         }
 
@@ -41,7 +35,7 @@ namespace Cheesemaking_recipes_API.Services
             var passwordHash = _hasher.HashPassword(user, dto.Password);
             user.PasswordHash = passwordHash;
 
-            _dbcontext.Users.Add(user);
+            _dbcontext.Add(user);
             _dbcontext.SaveChanges();
             _templateService.CreateDefaultTemplateForNewUser(user.Id);
         }
@@ -62,34 +56,8 @@ namespace Cheesemaking_recipes_API.Services
                 throw new BadRequestException("Wprowadzono nieprawidłowe hasło");
             }
 
-            string token = GenerateToken(user);
+            string token = _tokenGenerator.GenerateToken(user);
             return token;
-        }
-
-        private string GenerateToken(User user)
-        {
-            var claims = new List<Claim>()
-            {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.Name),
-                new Claim(ClaimTypes.Email, user.Email)
-            };
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-                _authenticationSettings.JwtKey));
-            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var expires = DateTime.Now.AddMinutes(_authenticationSettings.JwtExpireMinutes);
-
-            var token = new JwtSecurityToken(
-                _authenticationSettings.JwtIssuer,
-                _authenticationSettings.JwtIssuer,
-                claims,
-                expires: expires,
-                signingCredentials: credentials
-                );
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var tokenSerialized = tokenHandler.WriteToken(token);
-            return tokenSerialized;
         }
     }
 }

@@ -11,9 +11,9 @@ namespace Chesemaking_recipes_API_tests.Controllers
     [TestFixture]
     class TemplateControllerTests
     {
-        Mock<ITemplateService> service;
-        TemplateController controller;
-        List<TemplateDto> templatesDtos = new List<TemplateDto>()
+        private Mock<ITemplateService> service;
+        private TemplateController controller;
+        private List<TemplateDto> templatesDtos = new List<TemplateDto>()
         {
             new TemplateDto(),
             new TemplateDto()

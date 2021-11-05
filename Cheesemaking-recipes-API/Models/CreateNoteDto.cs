@@ -9,6 +9,6 @@ namespace Cheesemaking_recipes_API.Models
         [MaxLength(100)]
         public string Name { get; set; }
         [MinLength(1)]
-        public IEnumerable<InputDto> Inputs { get; set; }
+        public List<InputDto> Inputs { get; set; }
     }
 }

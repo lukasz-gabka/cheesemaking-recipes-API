@@ -12,9 +12,9 @@ namespace Cheesemaking_recipes_API.Services
     {
         private readonly ApiDbContext _dbContext;
         private readonly IMapper _mapper;
-        private readonly UserContextService _contextService;
+        private readonly IUserContextService _contextService;
 
-        public NoteService(ApiDbContext dbContext, IMapper mapper, UserContextService contextService)
+        public NoteService(ApiDbContext dbContext, IMapper mapper, IUserContextService contextService)
         {
             _dbContext = dbContext;
             _mapper = mapper;

@@ -4,7 +4,7 @@ using System.Security.Claims;
 
 namespace Cheesemaking_recipes_API.Services
 {
-    public class UserContextService
+    public class UserContextService : IUserContextService
     {
         private readonly IHttpContextAccessor _contextAccessor;
 

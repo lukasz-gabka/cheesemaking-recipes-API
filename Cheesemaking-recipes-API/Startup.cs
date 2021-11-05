@@ -35,11 +35,12 @@ namespace Cheesemaking_recipes_API
             services.AddScoped<ITemplateService, TemplateService>();
             services.AddScoped<INoteService, NoteService>();
             services.AddScoped<ErrorHandler>();
-            services.AddScoped<PasswordHasher<User>>();
+            services.AddScoped<IPasswordHasher<User>, PasswordHasher <User>>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ITokenGenerator, TokenGenerator>();
             services.AddScoped<IValidator<RegistrationDto>, RegistrationDtoValidator>();
             services.AddScoped<IValidator<LoginDto>, LoginDtoValidator>();
-            services.AddScoped<UserContextService>();
+            services.AddScoped<IUserContextService, UserContextService>();
             AddAuthentication(services);
             services.AddCors(options => {
                 options.AddPolicy("ReactApp", builder =>
